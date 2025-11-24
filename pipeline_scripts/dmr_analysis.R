@@ -7,53 +7,36 @@ colnames(dmr) <- c("chrom", "start", "end", "name", "score", "strand",
                    "h1_percent", "h2_percent", "h1_frac_mod", "h2_frac_mod")
 
 
-dmr <- dmr[, c(1:4, 13, 14, 5:12)]
-
-View(dmr)
-
+#View(dmr)
+# Creating a new column which tells us the difference in methylation
 dmr$frac_diff <- dmr$h1_frac_mod-dmr$h2_frac_mod
 
-View(dmr)
+#View(dmr)
+# Selecting relevant columns
 dmr <- dmr[, c(1:4, 15, 5:14)]
 
 
-write.table(dmr, file = "~/Desktop/parent_of_origin/dmr")
+#write.table(dmr, file = "~/Desktop/parent_of_origin/dmr")
 
-x <- read.clipboard(header = FALSE)
-dmr$methylated_parent <- y$V1
+# We copied the "methylated parent" variable from the list of iDMRs (new_icr.bed)
+# The iDMR list file was the same one used to run "modkit pair"
+methyl_pofo <- read.clipboard(header = FALSE)
+dmr$methylated_parent <- methyl_pofo
 
-View(dmr)
+#View(dmr)
 
-write.table(dmr, file = "./dmr.tsv", sep = "\t", col.names = TRUE)
+#write.table(dmr, file = "./dmr.tsv", sep = "\t", col.names = TRUE)
 
+# Identifying the actually differentially methylated iDMRs from the list
 highly_dmr <- dmr[(dmr$frac_diff > 0.6 | dmr$frac_diff < -0.6), ]
-View(highly_dmr)
+#View(highly_dmr)
+
+# Removing all NA values (all iDMRs which were not actually differentially methylated)
 highly_dmr <- na.omit(highly_dmr)
 highly_dmr <- sort_by(x = highly_dmr, y = highly_dmr$chrom)
-View(highly_dmr)
+#View(highly_dmr)
 
-p_of_o_assignment <- function(frac_diff, methyl_parent) {
-  if (methyl_parent=="Maternal") {
-    
-    if (frac_diff > 0) {
-      return("h1_maternal")
-    }
-    else {
-      return("h2_maternal")
-    }
-  }
-  
-  else {
-    if (frac_diff > 0) {
-      return("h2_maternal")
-    }
-    else {
-      return("h1_maternal")
-    }
-  }
-  
-}
-
+# Writing the output to be processed in the Python file which identifies PofO of variant alleles
 write.table(highly_dmr, file = "./highly_dmr.tsv", sep = "\t", col.names = TRUE)
 
 
