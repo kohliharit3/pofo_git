@@ -26,8 +26,17 @@ def reduced_inverse (x, m=1, x0=0):
     return y
 
 
-#chrom_sizes = pd.read_csv("chrom_size.csv")
+test_size = 10000000
+
 chrom_dmrs = pd.read_csv("chrom_dmrs.csv")
+
+
+
+test_icrs = pd.DataFrame(columns=["chrom", "start", "end", "name"])
+test_icrs.loc[len(test_icrs)] = ["test", (test_size/2)-10, (test_size/2)+10, "ICR"]
+
+
+#chrom_sizes = pd.read_csv("chrom_size.csv")
 #lcrs = pd.read_table("/home/harit/Desktop/app_michael/hg38_gaps.bed", header=None)
 #lcrs.columns = ["chrom", "start", "end"]
 #lcrs["size"] = lcrs["end"]-lcrs["start"]
@@ -36,7 +45,7 @@ chrom_dmrs = pd.read_csv("chrom_dmrs.csv")
 #het_phased = pd.read_csv("het_phased_all.csv")
 #hq_variants = het_phased[het_phased["QUAL"]>19.45]
 
-def create_simulated_reads(chrom='test', read_mu=8.62, read_sigma=1.11, mean_depth=35, show_plot=False, test_size=100000000):
+def create_simulated_reads(chrom='test', read_mu=8.62, read_sigma=1.11, mean_depth=35, show_plot=False, test_size=test_size):
     
     #First, we find the total size of the chromosome, giving us the upper range of "from"
     if chrom == 'test':
@@ -119,8 +128,6 @@ def phasing_simulator (icrs, mean_depth, chrom="all", simulate_variants=True, po
     frac = percentage_phased(blocks, chrom)
     return frac, blocks
 
-test_icrs = pd.DataFrame(columns=["chrom", "start", "end", "name"])
-test_icrs.loc[len(test_icrs)] = ["test", 49999990, 50000010, "ICR"]
 
 def percentage_phased (blocks, chrom="test"):
 
@@ -139,7 +146,7 @@ def percentage_phased (blocks, chrom="test"):
     #print("Total bases which can be assigned parent of origin: ", total)
 
     #We find size of the current chromosome to calculate fraction
-    chrom_size = 100000000
+    chrom_size = test_size
     
     frac = total * 100 / chrom_size
     #print("Percent of chromosome which can be assigned PofO: ", frac)
@@ -300,7 +307,7 @@ def create_variant_distribution (chrom='test', show_plot=False, variant_per=1000
 
     variant_pos = []
 
-    size = 100000000
+    size = test_size
     num_variants = int(size/variant_per) #assuming 1 variant every 1 kilobases
     #print("The number of variants to be generated here are: ", num_variants)
 
