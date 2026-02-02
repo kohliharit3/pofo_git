@@ -23,20 +23,27 @@ def chrom_pofo_predictor (chrom='all', bases_phased=None, read_mu=8.62, read_sig
 
     if bases_phased == None:
         print("How accurate do you want the predictions to be? Better accuracy means longer wait times!")
-        code = input("Enter code (1-5): \n1. Low (nsim=2) \n2. Medium (nsim=10) \n3. High (nsim=100) \n4. Super (nsim=1000) \n5. Custom\n")
-        nsim_codes = {1:2, 2:10, 3:100, 4:1000}
-        code = int(code)
+        code = input("Enter code (1-5): \n1. Low (nsim=2) \n2. Medium (nsim=10) \n3. High (nsim=100) \n4. Super (nsim=1000) \n5. Custom \nWARNING: Empty input will be understood as 'Medium'")
+        if code == "":
+            n_sim = 10
         
-        while (code not in [1,2,3,4,5]):
-            print("Sorry, could not understand. Accepted inputs are: 1, 2, 3, 4 and 5.")
-            code = input("Enter code (1-5): \n1. Low (nsim=2) \n2. Medium (nsim=10) \n3. High (nsim=100) \n4. Super (nsim=1000) \n5. Custom\n")
+        else:
+            nsim_codes = {1:2, 2:10, 3:100, 4:1000}
             code = int(code)
             
-        if code == 5:
-            n_sim = int(input("Enter custom n_sim: "))
+            while (code not in [1,2,3,4,5]):
+                print("Sorry, could not understand. Accepted inputs are: 1, 2, 3, 4 and 5.")
+                code = input("Enter code (1-5): \n1. Low (nsim=2) \n2. Medium (nsim=10) \n3. High (nsim=100) \n4. Super (nsim=1000) \n5. Custom\n")
+                
 
-        else:
-            n_sim = nsim_codes[code]
+            if int(code) == 5:
+                n_sim = int(input("Enter custom n_sim: "))
+
+            elif code == "":
+                n_sim = 10
+        
+            else:
+                n_sim = nsim_codes[int(code)]
         
         results = ideal.test_sim_results(read_mu=read_mu, read_sigma=read_sigma, var_mu=var_mu, 
                                          var_sigma=var_sigma, error_rate=error_rate, 
@@ -72,28 +79,69 @@ def take_inputs():
         print("We will have to find how many bases we phase with our parameters in an ideal chromosome.")
         print("WARNING: If you leave an input blank, the default will be used.")
 
-        var_mu = float(input("Variant Distribution - Log-mean (default 6.2): "))
-        var_sigma = float(input("Variant Distribution - Log-SD (default 1.4): "))
-        variant_per = float(input("You have one variant per ---- bases (default 1,000): "))
+        var_mu = input("Variant Distribution - Log-mean (default 6.2): ")
+        if var_mu == "":
+            var_mu = 6.2
+        else:
+            var_mu = float(var_mu)
+            
+        var_sigma = input("Variant Distribution - Log-SD (default 1.4): ")
+        if var_sigma == "":
+            var_sigma = 1.4
+        else:
+            var_sigma = float(var_sigma)
+        
+        variant_per = input("You have one variant per ---- bases (default 1,000): ")
+        if variant_per == "":
+            variant_per = 1000
+        else:
+            variant_per = float(variant_per)
 
+        
         print("Moving on to sequencing parameters...")
 
-        depth = float(input("Sequencing depth of coverage: "))
+        depth = input("Sequencing depth of coverage (default 35): ")
+        if depth == "":
+            depth = 35
+        else:
+            depth = float(depth)
 
         calc_log = input("Do you have log-parameters of read length distribution (y/n)? If not, you must enter mean and median read lengths. ")
 
-        if calc_log == 'y':
-            read_mu = float(input("Read Distribution - Log-mean (default 8.62): "))
-            read_sigma = float(input("Read Distribution - Log-SD (default 1.11): "))
-
+        if (calc_log == 'y') or (calc_log == ""):
+            read_mu = input("Read Distribution - Log-mean (default 8.62): ")
+            if read_mu == "":
+                read_mu = 8.62
+            else:
+                read_mu = float(read_mu)
+                
+            read_sigma = input("Read Distribution - Log-SD (default 1.11): ")
+            if read_sigma == "":
+                read_sigma = 1.11
+            else:
+                read_sigma = float(read_sigma)
+                
         elif calc_log == 'n':
             mean_read = float(input("Read Distribution - Mean read length (default 10,260 bp): \n"))
+            if mean_read == "":
+                mean_read = 10260
+            else:
+                mean_read = float(mean_read)
+            
             median_read = float(input("Read Distribution - Median read length (default 5,541 bp): \n"))
+            if median_read == "":
+                median_read = 5541
+            else:
+                median_read = float(median_read)
 
             read_mu = np.log(median_read)
             read_sigma = np.sqrt(2*(np.log(mean_read) - np.log(median_read)))
 
-        error_rate = float(input("Basecalling error rate (between 0 to 1): "))
+        error_rate = input("Basecalling error rate between 0 to 1 (default 0.1): ")
+        if error_rate == "":
+            error_rate = 0.1
+        else:
+            error_rate = float(error_rate)
 
         chrom_pofo_predictor (read_mu=read_mu, read_sigma=read_sigma, var_mu=var_mu, 
                               var_sigma=var_sigma, depth=depth, 
