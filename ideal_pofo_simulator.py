@@ -26,7 +26,7 @@ def reduced_inverse (x, m=1, x0=0):
     return y
 
 
-test_size = 10000000
+test_size = 100000000
 
 chrom_dmrs = pd.read_csv("chrom_dmrs.csv")
 
