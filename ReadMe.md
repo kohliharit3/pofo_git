@@ -14,7 +14,8 @@ Parent of origin phasing (PofO-phasing) refers to the process of assigning paren
 
 The pipeline scripts can be used to assign parent of origin to all identified heterozygous variants, provided they can be phased with an imprinted locus (iDMR). The workflow is in the diagram below.
 
-<img width="741" height="741" alt="ont_pipeline" src="https://github.com/user-attachments/assets/9c6f88cb-92d8-4e9b-b846-b415cd1da5cd" />
+<img width="911" height="641" alt="ont_pipeline" src="https://github.com/user-attachments/assets/b6c5907c-a777-4845-9efe-a205cefb31a7" />
+
 
 
 
