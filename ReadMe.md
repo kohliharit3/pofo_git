@@ -34,7 +34,7 @@ The predictor consists of 3 files:
 Details of each function are in the code (ideal_pofo_simulator.py). But overarching algorithm details are here.
 
 
-# Algorithm for “find_best_read” 
+### Algorithm for “find_best_read” 
 
 1. Obtain starting position and a direction (“upper” or “lower”). 
 
@@ -52,7 +52,7 @@ Details of each function are in the code (ideal_pofo_simulator.py). But overarch
 
  
 
-# Algorithm for “build_phase_blocks” 
+### Algorithm for “build_phase_blocks” 
 
 1. Obtain list of iDMRs. 
 
